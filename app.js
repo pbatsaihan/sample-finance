@@ -23,7 +23,31 @@ var uiController = (function () {
 })();
 
 // Санхүүгийн контролер
-var financeController = (function () {})();
+var financeController = (function () {
+  var Income = function (id, description, value) {
+    this.id = id;
+    this.description = description;
+    this.value = value;
+  };
+
+  var Expence = function (id, description, value) {
+    this.id = id;
+    this.description = description;
+    this.value = value;
+  };
+
+  var data = {
+    allItems: {
+      inc: [],
+      exp: [],
+    },
+
+    totals: {
+      inc: 0,
+      exp: 0,
+    },
+  };
+})();
 
 // Програм холбогч контролер
 var appController = (function (uiController, financeController) {
