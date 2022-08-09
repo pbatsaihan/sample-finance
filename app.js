@@ -19,6 +19,29 @@ var uiController = (function () {
     getDOMstrings: function () {
       return DOMstrings;
     },
+
+    addListItem: function (item, type) {
+      // 1. Орлого зарлагын элтенмтийг агуулсан html-ийг бэлтгэнэ.
+      var html, list;
+
+      if (type === "inc") {
+        list = ".income__list";
+        html =
+          '<div class="item clearfix" id="income-%id%"><div class="item__description">%descr%</div><div class="right clearfix"><div class="item__value">+ %val%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+      } else {
+        list = ".expenses__list";
+        html =
+          '<div class="item clearfix" id="expense-%id%"><div class="item__description">%descr%</div><div class="right clearfix"><div class="item__value">- %val%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+      }
+
+      // Тэр html дотроо орлого зарлагын утгуудыг Replace ашиглан өөрчлөнө
+      html = html.replace("%id%", item.id);
+      html = html.replace("%descr%", item.description);
+      html = html.replace("%val%", item.value);
+
+      // Бэлтгэсэн html ээ DOM руу хийж өгнө
+      document.querySelector(list).insertAdjacentHTML("beforeend", html);
+    },
   };
 })();
 
@@ -64,6 +87,8 @@ var financeController = (function () {
       }
 
       data.items[type].push(item);
+
+      return item;
     },
     seeData: function () {
       return data;
@@ -78,9 +103,15 @@ var appController = (function (uiController, financeController) {
     var input = uiController.getInput();
 
     // 2. Олж авсан өгөгдлүүдийг санхүүгийн контролор руу дамжуулж тэнд хадгална.
-    financeController.addItem(input.type, input.description, input.value);
+    var item = financeController.addItem(
+      input.type,
+      input.description,
+      input.value
+    );
 
     // 3. Олж авсан өгөгдлүүдийг вэб дээр тохирох хэсэгт гаргана
+    uiController.addListItem(item, input.type);
+
     // 4. Төсвийг тооцоолно.
     // 5. Эцсийн үлдэгдэл тооцоолж дэлгэцэнд гаргана.
   };
