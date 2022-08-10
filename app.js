@@ -5,6 +5,8 @@ var uiController = (function () {
     inputDescription: ".add__description",
     inputValue: ".add__value",
     addBtn: ".add__btn",
+    incomeList: ".income__list",
+    expenseList: ".expense__list",
   };
 
   return {
@@ -20,16 +22,32 @@ var uiController = (function () {
       return DOMstrings;
     },
 
+    clearFields: function () {
+      var fields = document.querySelectorAll(
+        DOMstrings.inputDescription + ", " + DOMstrings.inputValue
+      );
+      var fieldsArr = Array.prototype.slice.call(fields);
+
+      fieldsArr.forEach(function (el, index, array) {
+        el.value = "";
+      });
+      // for (var i = 0; i < fieldsArr.length; i++) {
+      //   fieldsArr[i].value = "";
+      // }
+      // Курсор байрлах буюу идэвхтэй талбарыг заана.
+      fieldsArr[0].focus();
+    },
+
     addListItem: function (item, type) {
-      // 1. Орлого зарлагын элтенмтийг агуулсан html-ийг бэлтгэнэ.
+      // Орлого зарлагын элтенмтийг агуулсан html-ийг бэлтгэнэ.
       var html, list;
 
       if (type === "inc") {
-        list = ".income__list";
+        list = DOMstrings.incomeList;
         html =
           '<div class="item clearfix" id="income-%id%"><div class="item__description">%descr%</div><div class="right clearfix"><div class="item__value">+ %val%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
       } else {
-        list = ".expenses__list";
+        list = DOMstrings.expenseList;
         html =
           '<div class="item clearfix" id="expense-%id%"><div class="item__description">%descr%</div><div class="right clearfix"><div class="item__value">- %val%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
       }
@@ -64,7 +82,6 @@ var financeController = (function () {
       inc: [],
       exp: [],
     },
-
     totals: {
       inc: 0,
       exp: 0,
@@ -111,6 +128,8 @@ var appController = (function (uiController, financeController) {
 
     // 3. Олж авсан өгөгдлүүдийг вэб дээр тохирох хэсэгт гаргана
     uiController.addListItem(item, input.type);
+    // Талбар дээрх утгуудыг цэвэрлэнэ
+    uiController.clearFields();
 
     // 4. Төсвийг тооцоолно.
     // 5. Эцсийн үлдэгдэл тооцоолж дэлгэцэнд гаргана.
