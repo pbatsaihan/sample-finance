@@ -14,7 +14,7 @@ var uiController = (function () {
       return {
         type: document.querySelector(DOMstrings.inputType).value,
         description: document.querySelector(DOMstrings.inputDescription).value,
-        value: document.querySelector(DOMstrings.inputValue).value,
+        value: parseInt(document.querySelector(DOMstrings.inputValue).value),
       };
     },
 
@@ -119,18 +119,20 @@ var appController = (function (uiController, financeController) {
     // 1.Оруулах өгөгдлийг олж авна
     var input = uiController.getInput();
 
-    // 2. Олж авсан өгөгдлүүдийг санхүүгийн контролор руу дамжуулж тэнд хадгална.
-    var item = financeController.addItem(
-      input.type,
-      input.description,
-      input.value
-    );
+    // Талбарууд хоосон үед оруулахгүй
+    if (input.description !== "" && input.value !== "") {
+      // 2. Олж авсан өгөгдлүүдийг санхүүгийн контролор руу дамжуулж тэнд хадгална.
+      var item = financeController.addItem(
+        input.type,
+        input.description,
+        input.value
+      );
 
-    // 3. Олж авсан өгөгдлүүдийг вэб дээр тохирох хэсэгт гаргана
-    uiController.addListItem(item, input.type);
-    // Талбар дээрх утгуудыг цэвэрлэнэ
-    uiController.clearFields();
-
+      // 3. Олж авсан өгөгдлүүдийг вэб дээр тохирох хэсэгт гаргана
+      uiController.addListItem(item, input.type);
+      // Талбар дээрх утгуудыг цэвэрлэнэ
+      uiController.clearFields();
+    }
     // 4. Төсвийг тооцоолно.
     // 5. Эцсийн үлдэгдэл тооцоолж дэлгэцэнд гаргана.
   };
