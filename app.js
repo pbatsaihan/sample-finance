@@ -219,13 +219,15 @@ var appController = (function (uiController, financeController) {
 
   return {
     init: function () {
+      console.log("Application started...");
+
       uiController.seeBalance({
         balance: 0,
         percent: 0,
         totalInc: 0,
         totalExp: 0,
       });
-      console.log("Application started...");
+
       setupEventListeners();
     },
   };
