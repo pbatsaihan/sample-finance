@@ -1,4 +1,6 @@
+// **************************************************************************
 // Дэлгэцтэй ажиллах контролер
+// **************************************************************************
 var uiController = (function () {
   var DOMstrings = {
     inputType: ".add__type",
@@ -7,6 +9,10 @@ var uiController = (function () {
     addBtn: ".add__btn",
     incomeList: ".income__list",
     expenseList: ".expenses__list",
+    balanceValue: ".budget__value",
+    incomeValue: ".budget__income--value",
+    expenseValue: ".budget__expenses--value",
+    percentageValue: ".budget__expenses--percentage",
   };
 
   return {
@@ -38,6 +44,23 @@ var uiController = (function () {
       fieldsArr[0].focus();
     },
 
+    seeBalance: function (balance) {
+      document.querySelector(DOMstrings.balanceValue).textContent =
+        balance.balance;
+      document.querySelector(DOMstrings.incomeValue).textContent =
+        balance.totalInc;
+      document.querySelector(DOMstrings.expenseValue).textContent =
+        balance.totalExp;
+
+      if (balance.percent !== 0) {
+        document.querySelector(DOMstrings.percentageValue).textContent =
+          balance.percent + "%";
+      } else {
+        document.querySelector(DOMstrings.percentageValue).textContent =
+          balance.percent;
+      }
+    },
+
     addListItem: function (item, type) {
       // Орлого зарлагын элтенмтийг агуулсан html-ийг бэлтгэнэ.
       var html, list;
@@ -63,7 +86,9 @@ var uiController = (function () {
   };
 })();
 
+// **************************************************************************
 // Санхүүгийн контролер
+// **************************************************************************
 var financeController = (function () {
   var Income = function (id, description, value) {
     this.id = id;
@@ -144,7 +169,9 @@ var financeController = (function () {
   };
 })();
 
+// **************************************************************************
 // Програм холбогч контролер
+// **************************************************************************
 var appController = (function (uiController, financeController) {
   var ctrlAddItem = function () {
     // 1.Оруулах өгөгдлийг олж авна
@@ -171,7 +198,8 @@ var appController = (function (uiController, financeController) {
       var balance = financeController.getBalance();
 
       // 6. Төсвийн тооцоог дэлгэцэнд гаргана.
-      console.log(balance);
+      uiController.seeBalance(balance);
+      // console.log(balance);
     }
   };
 
@@ -191,6 +219,12 @@ var appController = (function (uiController, financeController) {
 
   return {
     init: function () {
+      uiController.seeBalance({
+        balance: 0,
+        percent: 0,
+        totalInc: 0,
+        totalExp: 0,
+      });
       console.log("Application started...");
       setupEventListeners();
     },
