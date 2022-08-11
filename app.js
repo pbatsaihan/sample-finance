@@ -13,6 +13,7 @@ var uiController = (function () {
     incomeValue: ".budget__income--value",
     expenseValue: ".budget__expenses--value",
     percentageValue: ".budget__expenses--percentage",
+    containerDiv: ".container",
   };
 
   return {
@@ -68,11 +69,11 @@ var uiController = (function () {
       if (type === "inc") {
         list = DOMstrings.incomeList;
         html =
-          '<div class="item clearfix" id="income-%id%"><div class="item__description">%descr%</div><div class="right clearfix"><div class="item__value">+ %val%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+          '<div class="item clearfix" id="inc-%id%"><div class="item__description">%descr%</div><div class="right clearfix"><div class="item__value">+ %val%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
       } else {
         list = DOMstrings.expenseList;
         html =
-          '<div class="item clearfix" id="expense-%id%"><div class="item__description">%descr%</div><div class="right clearfix"><div class="item__value">- %val%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+          '<div class="item clearfix" id="exp-%id%"><div class="item__description">%descr%</div><div class="right clearfix"><div class="item__value">- %val%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
       }
 
       // Тэр html дотроо орлого зарлагын утгуудыг Replace ашиглан өөрчлөнө
@@ -150,9 +151,12 @@ var financeController = (function () {
         return e.id;
       });
 
+      console.log("ids: " + ids);
       var index = ids.indexOf(id);
+      console.log("index: " + index);
 
       if (index !== -1) {
+        console.log("deleteleh gej bna");
         data.items[type].splice(index, 1);
       }
     },
@@ -227,6 +231,23 @@ var appController = (function (uiController, financeController) {
         ctrlAddItem();
       }
     });
+
+    document
+      .querySelector(DOM.containerDiv)
+      .addEventListener("click", function (event) {
+        var id = event.target.parentNode.parentNode.parentNode.parentNode.id;
+
+        if (id) {
+          var arr = id.split("-");
+          var type = arr[0];
+          var itemId = parseInt(arr[1]);
+
+          // 1 Санхүүгийн модулиас type, id ашиглан устгана
+          financeController.deleteItem(type, itemId);
+          // 2. Дэлгэц дээрээс энэ элментийг устгана
+          // 3. Үлдэгдэл тооцоог шинэчилж харуулна
+        }
+      });
   };
 
   return {
