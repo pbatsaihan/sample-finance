@@ -6,7 +6,7 @@ var uiController = (function () {
     inputValue: ".add__value",
     addBtn: ".add__btn",
     incomeList: ".income__list",
-    expenseList: ".expense__list",
+    expenseList: ".expenses__list",
   };
 
   return {
@@ -80,7 +80,7 @@ var financeController = (function () {
   var calculateTotal = function (type) {
     var sum = 0;
     data.items[type].forEach(function (el) {
-      sum = sum + el;
+      sum = sum + el.value;
     });
 
     data.totals[type] = sum;
@@ -163,11 +163,16 @@ var appController = (function (uiController, financeController) {
       uiController.addListItem(item, input.type);
       // Талбар дээрх утгуудыг цэвэрлэнэ
       uiController.clearFields();
+
+      // 4. Төсвийг тооцоолно.
+      financeController.calcBalance();
+
+      // 5. Эцсийн үлдэгдэл
+      var balance = financeController.getBalance();
+
+      // 6. Төсвийн тооцоог дэлгэцэнд гаргана.
+      console.log(balance);
     }
-    // 4. Төсвийг тооцоолно.
-    financeController.calcBalance();
-    // 5. Эцсийн үлдэгдэл тооцоолж дэлгэцэнд гаргана.
-    var balance = financeController.getBalance();
   };
 
   var setupEventListeners = function () {
