@@ -208,17 +208,20 @@ var appController = (function (uiController, financeController) {
       uiController.addListItem(item, input.type);
       // Талбар дээрх утгуудыг цэвэрлэнэ
       uiController.clearFields();
-
-      // 4. Төсвийг тооцоолно.
-      financeController.calcBalance();
-
-      // 5. Эцсийн үлдэгдэл
-      var balance = financeController.getBalance();
-
-      // 6. Төсвийн тооцоог дэлгэцэнд гаргана.
-      uiController.seeBalance(balance);
-      // console.log(balance);
+      // Төсвийг шинээр тооцоолж дэлгэцэнд үзүүлнэ
+      updateBalance();
     }
+  };
+
+  var updateBalance = function () {
+    // 4. Төсвийг тооцоолно.
+    financeController.calcBalance();
+
+    // 5. Эцсийн үлдэгдэл
+    var balance = financeController.getBalance();
+
+    // 6. Төсвийн тооцоог дэлгэцэнд гаргана.
+    uiController.seeBalance(balance);
   };
 
   var setupEventListeners = function () {
@@ -249,6 +252,8 @@ var appController = (function (uiController, financeController) {
           // 2. Дэлгэц дээрээс энэ элментийг устгана
           uiController.deleteListItem(id);
           // 3. Үлдэгдэл тооцоог шинэчилж харуулна
+          // Төсвийг шинээр тооцоолж дэлгэцэнд үзүүлнэ
+          updateBalance();
         }
       });
   };
