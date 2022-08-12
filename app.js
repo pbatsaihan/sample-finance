@@ -15,6 +15,7 @@ var uiController = (function () {
     percentageValue: ".budget__expenses--percentage",
     containerDiv: ".container",
     expPercentageValue: ".item__percentage",
+    dateLabel: ".budget__title--month",
   };
 
   var nodeListForeach = function (list, callback) {
@@ -23,7 +24,31 @@ var uiController = (function () {
     }
   };
 
+  var formatMoney = function (too, type) {
+    too = "" + too;
+    var x = too.split("").reverse().join("");
+    var y = "";
+    var count = 1;
+    for (var i = 0; i < x.length; i++) {
+      y = y + x[i];
+      if (count % 3 === 0) y = y + ",";
+      count++;
+    }
+    var z = y.split("").reverse().join("");
+    if (z[0] === ",") z = z.substr(1, z.length - 1);
+    if (type === "inc") z = "+ " + z;
+    else z = "- " + z;
+
+    return z;
+  };
+
   return {
+    displayDate: function () {
+      var today = new Date();
+      document.querySelector(DOMstrings.dateLabel).textContent =
+        today.getFullYear() + " оны " + today.getMonth() + "-р сарын";
+    },
+
     getInput: function () {
       return {
         type: document.querySelector(DOMstrings.inputType).value,
@@ -61,12 +86,21 @@ var uiController = (function () {
     },
 
     seeBalance: function (balance) {
-      document.querySelector(DOMstrings.balanceValue).textContent =
-        balance.balance;
-      document.querySelector(DOMstrings.incomeValue).textContent =
-        balance.totalInc;
-      document.querySelector(DOMstrings.expenseValue).textContent =
-        balance.totalExp;
+      var type;
+      if (balance.balance >= 0) type = "inc";
+      else type = "exp";
+      document.querySelector(DOMstrings.balanceValue).textContent = formatMoney(
+        balance.balance,
+        type
+      );
+      document.querySelector(DOMstrings.incomeValue).textContent = formatMoney(
+        balance.totalInc,
+        "inc"
+      );
+      document.querySelector(DOMstrings.expenseValue).textContent = formatMoney(
+        balance.totalExp,
+        "exp"
+      );
 
       if (balance.percent !== 0) {
         document.querySelector(DOMstrings.percentageValue).textContent =
@@ -89,17 +123,17 @@ var uiController = (function () {
       if (type === "inc") {
         list = DOMstrings.incomeList;
         html =
-          '<div class="item clearfix" id="inc-%id%"><div class="item__description">%descr%</div><div class="right clearfix"><div class="item__value">+ %val%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+          '<div class="item clearfix" id="inc-%id%"><div class="item__description">%descr%</div><div class="right clearfix"><div class="item__value">%val%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
       } else {
         list = DOMstrings.expenseList;
         html =
-          '<div class="item clearfix" id="exp-%id%"><div class="item__description">%descr%</div><div class="right clearfix"><div class="item__value">- %val%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+          '<div class="item clearfix" id="exp-%id%"><div class="item__description">%descr%</div><div class="right clearfix"><div class="item__value">%val%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
       }
 
       // Тэр html дотроо орлого зарлагын утгуудыг Replace ашиглан өөрчлөнө
       html = html.replace("%id%", item.id);
       html = html.replace("%descr%", item.description);
-      html = html.replace("%val%", item.value);
+      html = html.replace("%val%", formatMoney(item.value, type));
 
       // Бэлтгэсэн html ээ DOM руу хийж өгнө
       document.querySelector(list).insertAdjacentHTML("beforeend", html);
@@ -312,6 +346,7 @@ var appController = (function (uiController, financeController) {
     init: function () {
       console.log("Application started...");
 
+      uiController.displayDate();
       uiController.seeBalance({
         balance: 0,
         percent: 0,
