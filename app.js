@@ -45,8 +45,22 @@ var uiController = (function () {
   return {
     displayDate: function () {
       var today = new Date();
+      var months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
       document.querySelector(DOMstrings.dateLabel).textContent =
-        today.getFullYear() + " оны " + today.getMonth() + "-р сарын";
+        months[today.getMonth()] + " " + today.getFullYear();
     },
 
     getInput: function () {
