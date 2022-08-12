@@ -62,6 +62,11 @@ var uiController = (function () {
       }
     },
 
+    deleteListItem: function (id) {
+      var el = document.getElementById(id);
+      el.parentNode.removeChild(el);
+    },
+
     addListItem: function (item, type) {
       // Орлого зарлагын элтенмтийг агуулсан html-ийг бэлтгэнэ.
       var html, list;
@@ -147,16 +152,13 @@ var financeController = (function () {
     },
 
     deleteItem: function (type, id) {
-      var ids = data.items[type].map(function (e) {
-        return e.id;
+      var ids = data.items[type].map(function (el) {
+        return el.id;
       });
 
-      console.log("ids: " + ids);
       var index = ids.indexOf(id);
-      console.log("index: " + index);
 
       if (index !== -1) {
-        console.log("deleteleh gej bna");
         data.items[type].splice(index, 1);
       }
     },
@@ -245,6 +247,7 @@ var appController = (function (uiController, financeController) {
           // 1 Санхүүгийн модулиас type, id ашиглан устгана
           financeController.deleteItem(type, itemId);
           // 2. Дэлгэц дээрээс энэ элментийг устгана
+          uiController.deleteListItem(id);
           // 3. Үлдэгдэл тооцоог шинэчилж харуулна
         }
       });
